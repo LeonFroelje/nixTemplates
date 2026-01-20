@@ -19,7 +19,7 @@
     nixosModules = builtins.listToAttrs (pkgs.lib.lists.map (lang: {
       name = "typst-${lang}";
       value = { config, lib, pkgs, ... }: {
-        imports = [ ./modules/typst.nix ];
+        imports = [ ./typst.nix ];
         typstConfig = {
           enable = true;
           language = lang;
