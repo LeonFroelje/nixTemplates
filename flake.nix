@@ -12,6 +12,11 @@
         description = "Typst devShells in for different languages";
         welcomeText = "";
       };
+      python= {
+        path = ./python;
+        description = "Python devShells";
+        welcomeText = "";
+      };
     };
 
 
