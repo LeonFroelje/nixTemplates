@@ -12,24 +12,41 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, nixpkgs, nixvim, nixvimModules }:
-  let
-    languages = [ "de-DE" "en-US" "en-GB" ];
-    system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
-  in 
-  {
-    devShells.${system} = builtins.listToAttrs (pkgs.lib.lists.map (lang: {
-        name = "typst-${lang}";
-        value = pkgs.mkShell {
-          packages = with pkgs; [
-            ltex-ls-plus
-            fd
-            ripgrep
-            (nixvim.legacyPackages.${system}.makeNixvim nixvimModules.nixosModules."typst-${lang}" ) 
-          ];
-          shellHook = "zsh";
-        };
-     }) languages);
-  };
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nixvim,
+      nixvimModules,
+    }:
+    let
+      languages = [
+        "de-DE"
+        "en-US"
+        "en-GB"
+      ];
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      devShells.${system} = builtins.listToAttrs (
+        pkgs.lib.lists.map (lang: {
+          name = "typst-${lang}";
+          value = pkgs.mkShell {
+            packages = with pkgs; [
+              ltex-ls-plus
+              fd
+              ripgrep
+              (nixvimModules.lib.mkNvim (
+                with nixvimModules.nixosModules;
+                [
+                  nixvimModules.nixosModules."typst-${lang}"
+                ]
+              ))
+            ];
+            shellHook = "zsh";
+          };
+        }) languages
+      );
+    };
 }

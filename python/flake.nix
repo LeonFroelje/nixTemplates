@@ -14,40 +14,53 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixvim, nixvimModules }:
-  let
-    system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
-  in 
-  {
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nixvim,
+      nixvimModules,
+    }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
 
-    devShells.${system} = {
-      default = (pkgs.buildFHSEnv {
-        name = "Python dev shell";
-        targetPkgs = p: with p; [
-          fd
-          ripgrep
-          (nixvim.legacyPackages.${system}.makeNixvim nixvimModules.nixosModules."python") 
-          python314
-          python314Packages.pip
-        ];
-        runScript = "zsh";
-      }).env;
+      devShells.${system} = {
+        default =
+          (pkgs.buildFHSEnv {
+            name = "Python dev shell";
+            targetPkgs =
+              p: with p; [
+                fd
+                ripgrep
+                (nixvimModules.lib.mkNvim [ nixvimModules.nixosModules.python ])
+                python314
+                python314Packages.pip
+              ];
+            runScript = "zsh";
+          }).env;
 
-      uv = (pkgs.buildFHSEnv {
-        name = "uv-shell";
-        targetPkgs = p: with p; [
-          uv
-          zlib
-          glib
-          openssl
-          stdenv.cc.cc.lib 
-          (nixvim.legacyPackages.${system}.makeNixvim nixvimModules.nixosModules."python") 
-        ];
-        runScript = "zsh";
-        
-        multiPkgs = p: [ p.zlib p.openssl ];
-      }).env;
+        uv =
+          (pkgs.buildFHSEnv {
+            name = "uv-shell";
+            targetPkgs =
+              p: with p; [
+                uv
+                zlib
+                glib
+                openssl
+                stdenv.cc.cc.lib
+                (nixvimModules.lib.mkNvim [ nixvimModules.nixosModules.python ])
+              ];
+            runScript = "zsh";
+
+            multiPkgs = p: [
+              p.zlib
+              p.openssl
+            ];
+          }).env;
+      };
     };
-  };
 }
