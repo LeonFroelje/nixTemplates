@@ -5,20 +5,37 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
   };
 
-  outputs = { self, nixpkgs }: {
-    templates = {
-      typst = {
-        path = ./typst;
-        description = "Typst devShells in for different languages";
-        welcomeText = "";
+  outputs =
+    { self, nixpkgs }:
+    {
+      templates = {
+        typst = {
+          path = ./typst;
+          description = "Typst devShells in for different languages";
+          welcomeText = "";
+        };
+        python = {
+          path = ./python;
+          description = "Python devShells";
+          welcomeText = "";
+        };
       };
-      python= {
-        path = ./python;
-        description = "Python devShells";
-        welcomeText = "";
+      rust = {
+        path = ./rust;
+        description = "Rust/Cargo devShells";
       };
+      javascript = {
+        path = ./javascript;
+        description = "Node/JS/TS devShells";
+      };
+      opentofu = {
+        path = ./opentofu;
+        description = "OpenTofu/Terraform devShells";
+      };
+      latex = {
+        path = ./latex;
+        description = "LaTeX/Texlab devShells";
+      };
+
     };
-
-
-  };
 }
