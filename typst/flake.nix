@@ -34,13 +34,18 @@
           name = "typst-${lang}";
           value = pkgs.mkShell {
             packages = with pkgs; [
-              ltex-ls-plus
               fd
               ripgrep
               (nixvimModules.lib.mkNvim (
                 with nixvimModules.nixosModules;
                 [
-                  nixvimModules.nixosModules."typst-${lang}"
+                  nixvimModules.nixosModules."typst"
+                  {
+                    typstConfig = {
+                      language = "lang";
+                      languagetoolServer = "https://languagetool.lfroelje.de";
+                    };
+                  }
                 ]
               ))
             ];
