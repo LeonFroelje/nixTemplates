@@ -28,7 +28,22 @@
     {
 
       devShells.${system} = {
-        default =
+
+        default = pkgs.mkShell {
+          name = "Python dev shell";
+          packages = with pkgs; [
+            (python313.withPackages (
+              py-pkgs: with py-pkgs; [
+                numpy
+                qiskit
+                qiskit-aer
+
+              ]
+            ))
+          ];
+          shellHook = "zsh";
+        };
+        fhs =
           (pkgs.buildFHSEnv {
             name = "Python dev shell";
             targetPkgs =
