@@ -28,15 +28,37 @@
     {
 
       devShells.${system} = {
-
+        jupyter = pkgs.mkShell {
+          packages = with pkgs; [
+            # texliveFull
+            (python313.withPackages (
+              py-pkgs: with py-pkgs; [
+                numpy
+                pandas
+                matplotlib
+                jupyter
+                jupyterlab
+                jupyter-lsp
+              ]
+            ))
+            (nixvimModules.lib.mkNvim (
+              with nixvimModules.nixosModules;
+              [
+                nixvimModules.nixosModules."json"
+                nixvimModules.nixosModules."python"
+              ]
+            ))
+          ];
+          shellHook = "zsh";
+        };
         default = pkgs.mkShell {
           name = "Python dev shell";
           packages = with pkgs; [
             (python313.withPackages (
               py-pkgs: with py-pkgs; [
                 numpy
-                qiskit
-                qiskit-aer
+                pandas
+                matplotlib
 
               ]
             ))
