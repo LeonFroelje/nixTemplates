@@ -9,6 +9,11 @@
     { self, nixpkgs }:
     {
       templates = {
+        lean = {
+          path = ./lean;
+          description = "Lean/Lake devShell";
+          welcomeText = "";
+        };
         typst = {
           path = ./typst;
           description = "Typst devShells in for different languages";
